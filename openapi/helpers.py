@@ -1,4 +1,8 @@
+import typing
+
 import jsonschema
+
+from openapi.exceptions import ValidationError
 
 
 def resolve_schema_references(schema: dict, base_uri: str = None) -> dict:
@@ -25,3 +29,22 @@ def resolve_schema_references(schema: dict, base_uri: str = None) -> dict:
         return {k: _resolve_schema_references(v) for k, v in _schema.items()}
 
     return _resolve_schema_references(schema)
+
+
+def validate_schema(schema: dict, content: typing.Any) -> None:
+    """This function validates content against a JSON Schema.
+
+    If there are validation errors, an openapi.exceptions.ValidationError
+    exception is raised. Take a look at its definition for more details.
+
+    :param schema: a JSON Schema dict.
+    :param content: anything to be validated against the JSON Schema.
+    :return: None.
+    """
+    validator = jsonschema.Draft4Validator(schema)
+
+    try:
+        validator.validate(content)
+    except jsonschema.ValidationError:
+        errors = [e.message for e in validator.iter_errors(schema)]
+        raise ValidationError(errors)
