@@ -64,8 +64,7 @@ def match_path(path: str, paths: typing.List[str]) -> typing.Tuple[str, dict]:
     :return: the OpenAPI path and a dict with a parameters map
     """
     for candidate in paths:
-        path_regex = f'^{candidate}$'
-        path_regex = re.sub(r'\{(.*)\}', r'(?P<\1>\\w+)', path_regex)
+        path_regex = re.sub(r'\{(.*)\}', r'(?P<\1>\\w+)', f'^{candidate}$')
         match = re.match(path_regex, path)
         if not match:
             continue
