@@ -17,9 +17,9 @@ def resolve_schema_references(schema: dict, base_uri: str = None) -> dict:
     Schemas provided as a parameter or found by the JSON Schema Reference
     Resolver contains circular references.
 
-    :param schema: a JSON Schema dict with unresolved references.
-    :param base_uri: optional path to search for additional JSON Schema files.
-    :return: a JSON Schema dict with resolved references.
+    :param schema: a JSON Schema dict with unresolved references
+    :param base_uri: optional path to search for additional JSON Schema files
+    :return: a JSON Schema dict with resolved references
     """
     resolver = jsonschema.RefResolver(base_uri or '', schema)
 
@@ -42,9 +42,9 @@ def validate_schema(schema: dict, content: typing.Any) -> None:
     If there are validation errors, an openapi.exceptions.ValidationError
     exception is raised. Take a look at its definition for more details.
 
-    :param schema: a JSON Schema dict.
-    :param content: anything to be validated against the JSON Schema.
-    :return: None.
+    :param schema: a JSON Schema dict
+    :param content: anything to be validated against the JSON Schema
+    :return: None
     """
     validator = jsonschema.Draft4Validator(schema)
 
@@ -56,6 +56,13 @@ def validate_schema(schema: dict, content: typing.Any) -> None:
 
 
 def match_path(path: str, paths: typing.List[str]) -> typing.Tuple[str, dict]:
+    """This function matches a path and its parameters against a list of
+    OpenAPI paths.
+
+    :param path: a string with a formatted path (e.g.: /pets or /pets/15)
+    :param paths: a list of OpenAPI path strings (e.g.: /pets, /pets/{pet_id})
+    :return: the OpenAPI path and a dict with a parameters map
+    """
     for candidate in paths:
         path_regex = f'^{candidate}$'
         path_regex = re.sub(r'\{(.*)\}', r'(?P<\1>\\w+)', path_regex)
