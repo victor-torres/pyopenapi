@@ -1,8 +1,13 @@
+import re
 import typing
 
 import jsonschema
 
-from openapi.exceptions import ValidationError
+
+from openapi.exceptions import (
+    ValidationError,
+    NotFoundError,
+)
 
 
 def resolve_schema_references(schema: dict, base_uri: str = None) -> dict:
@@ -48,3 +53,16 @@ def validate_schema(schema: dict, content: typing.Any) -> None:
     except jsonschema.ValidationError:
         errors = [e.message for e in validator.iter_errors(content)]
         raise ValidationError(errors)
+
+
+def match_path(path: str, paths: typing.List[str]) -> typing.Tuple[str, dict]:
+    for candidate in paths:
+        path_regex = f'^{candidate}$'
+        path_regex = re.sub(r'\{(.*)\}', r'(?P<\1>\\w+)', path_regex)
+        match = re.match(path_regex, path)
+        if not match:
+            continue
+
+        return candidate, match.groupdict()
+
+    raise NotFoundError()
