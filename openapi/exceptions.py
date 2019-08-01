@@ -14,4 +14,5 @@ class ValidationError(OpenAPIException):
 
 class NotFoundError(OpenAPIException):
 
-    pass
+    def __init__(self, path: str):
+        self.path = path

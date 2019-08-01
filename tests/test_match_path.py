@@ -26,6 +26,8 @@ class MatchPathTestCase(unittest.TestCase):
         with self.assertRaises(NotFoundError) as context:
             match_path('/petz', self.paths)
 
+        self.assertEqual(context.exception.path, '/petz')
+
 
 if __name__ == '__main__':
     unittest.main()

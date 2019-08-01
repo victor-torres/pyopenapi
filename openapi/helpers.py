@@ -71,4 +71,4 @@ def match_path(path: str, paths: typing.List[str]) -> typing.Tuple[str, dict]:
 
         return candidate, match.groupdict()
 
-    raise NotFoundError()
+    raise NotFoundError(path)
