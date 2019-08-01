@@ -46,5 +46,5 @@ def validate_schema(schema: dict, content: typing.Any) -> None:
     try:
         validator.validate(content)
     except jsonschema.ValidationError:
-        errors = [e.message for e in validator.iter_errors(schema)]
+        errors = [e.message for e in validator.iter_errors(content)]
         raise ValidationError(errors)
