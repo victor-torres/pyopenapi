@@ -72,3 +72,12 @@ def match_path(path: str, paths: typing.List[str]) -> typing.Tuple[str, dict]:
         return candidate, match.groupdict()
 
     raise NotFoundError(path)
+
+
+def get_paths(spec: dict) -> typing.List[str]:
+    """This function extracts a list of paths from an OpenAPI specification.
+
+    :param spec: a dict with an OpenAPI specification
+    :return: a list of OpenAPI path strings (e.g.: /pets, /pets/{pet_id})
+    """
+    return [str(k) for k in spec['paths'].keys()]
