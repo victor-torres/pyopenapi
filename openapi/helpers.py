@@ -1,5 +1,6 @@
 import re
 import typing
+import urllib.parse
 
 import jsonschema
 
@@ -61,15 +62,18 @@ def match_path(path: str, paths: typing.List[str]) -> typing.Tuple[str, dict]:
 
     :param path: a string with a formatted path (e.g.: /pets or /pets/15)
     :param paths: a list of OpenAPI path strings (e.g.: /pets, /pets/{pet_id})
-    :return: a tuple with the OpenAPI path and its query parameters dict
+    :return: a tuple with the OpenAPI path, its path and query parameters dicts
     """
+    url = urllib.parse.urlsplit(path)
     for candidate in paths:
         path_regex = re.sub(r'\{(\w+)\}', r'(?P<\1>\\w+)', f'^{candidate}$')
-        match = re.match(path_regex, path)
+        match = re.match(path_regex, url.path)
         if not match:
             continue
 
-        return candidate, match.groupdict()
+        path_params = match.groupdict()
+        query_params = dict(urllib.parse.parse_qsl(url.query))
+        return candidate, path_params, query_params
 
     raise NotFoundError(path)
 

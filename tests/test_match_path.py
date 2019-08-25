@@ -13,14 +13,22 @@ class MatchPathTestCase(unittest.TestCase):
         )
 
     def test_simple_path(self):
-        path_match, path_parameters = match_path('/pets', self.paths)
-        self.assertEqual(path_match, '/pets')
-        self.assertEqual(path_parameters, {})
+        match, params, query = match_path('/pets', self.paths)
+        self.assertEqual(match, '/pets')
+        self.assertEqual(params, {})
+        self.assertEqual(query, {})
+
+    def test_query_path(self):
+        match, params, query = match_path('/pets?limit=10', self.paths)
+        self.assertEqual(match, '/pets')
+        self.assertEqual(params, {})
+        self.assertEqual(query, {'limit': '10'})
 
     def test_parameter_path(self):
-        path_match, path_parameters = match_path('/pets/15', self.paths)
-        self.assertEqual(path_match, '/pets/{pet_id}')
-        self.assertEqual(path_parameters, {'pet_id': '15'})
+        match, params, query = match_path('/pets/15', self.paths)
+        self.assertEqual(match, '/pets/{pet_id}')
+        self.assertEqual(params, {'pet_id': '15'})
+        self.assertEqual(query, {})
 
     def test_not_found_path(self):
         with self.assertRaises(NotFoundError) as context:
