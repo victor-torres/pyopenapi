@@ -61,7 +61,7 @@ def match_path(path: str, paths: typing.List[str]) -> typing.Tuple[str, dict]:
 
     :param path: a string with a formatted path (e.g.: /pets or /pets/15)
     :param paths: a list of OpenAPI path strings (e.g.: /pets, /pets/{pet_id})
-    :return: a tuple with the OpenAPI path and its parameters dict
+    :return: a tuple with the OpenAPI path and its query parameters dict
     """
     for candidate in paths:
         path_regex = re.sub(r'\{(\w+)\}', r'(?P<\1>\\w+)', f'^{candidate}$')
