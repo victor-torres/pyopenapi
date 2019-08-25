@@ -16,6 +16,12 @@ class GetPathsTestCase(unittest.TestCase):
         ]
         self.assertEqual(paths, expected_paths)
 
+    def test_foo(self):
+        from openapi import Request
+        from openapi.helpers import validate_request
+        spec = load_yaml_fixture('petstore.yaml')
+        validate_request(spec, Request(url='/pets?limit=10', method='get', headers={}))
+
 
 if __name__ == '__main__':
     unittest.main()
